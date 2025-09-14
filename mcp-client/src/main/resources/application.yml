@@ -1,0 +1,56 @@
+
+spring:
+  application:
+    name: spring-ai-mcp-client
+  profiles:
+    active: dev
+  ai:
+    mcp:
+      client:
+        enabled: true
+        name: spring-ai-mcp-client
+        type: ASYNC
+        sse:
+          connections:
+            server1:
+              url: https://mcp.amap.com
+              sse-endpoint: /sse?key=xxx
+            server2:
+              url: https://mcp.api-inference.modelscope.net
+              sse-endpoint: /1fa90038a2e949/sse
+            server3:
+              url: http://localhost:9060
+              sse-endpoint: /sse
+        stdio:
+          servers-configuration: classpath:mcp-server.json
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: ${OPENAI_BASE_URL}
+      chat:
+        options:
+          model: ${OPENAI_MODEL}
+    transformers:
+      embedding:
+        model-path: classpath:models/model.onnx
+        model-name: local-embedding-model
+    vectorstore:
+      redis:
+        initialize-schema: true         # 是否初始化所需的模式
+#        index-name: default     # 用于存储向量的索引名称
+        custom-index-name: lmw-vectorstore     # 自定义索引名称
+        prefix: 'lmw-embedding:'             # Redis 键的前缀
+
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 9379
+      password: 123456
+logging:
+  level:
+    root: info
+
+internet:
+  websearch:
+    searxng:
+      url: http://localhost:6080/search
+      counts: 10
